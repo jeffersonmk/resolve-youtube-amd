@@ -37,6 +37,15 @@ fi
 $SUDO mkdir -p "$TARGET"
 $SUDO install -m 755 "$REPO/build/youtube_amd_plugin.dvcp" "$TARGET/youtube_amd_plugin.dvcp"
 
+if [ -d "$RESOLVE_DIR/IOPlugins/ffmpeg_encoder_plugin.dvcp.bundle" ]; then
+    say "AUR FFmpeg plugin found: both plugins will be available side by side"
+    if ls "$HOME"/.local/share/vulkan/implicit_layer.d/VkLayer_LSFGVK* >/dev/null 2>&1 &&
+       ! grep -qs DISABLE_LSFGVK "$HOME/.local/share/applications/com.blackmagicdesign.resolve.desktop"; then
+        echo "WARNING: lsfg-vk is installed and can crash Resolve at startup together with the AUR plugin."
+        echo "         See 'Using it together with the AUR FFmpeg plugin' in README.md."
+    fi
+fi
+
 say "Done"
 cat <<'EOF'
 Next steps:

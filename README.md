@@ -109,6 +109,30 @@ The presets don't need to be created again.
 If Resolve was closed, the presets stay; delete the three **YouTube AMD - …** presets in Deliver
 (right-click → Delete), or open Resolve and run `/usr/bin/python3 scripts/install_presets.py --remove`.
 
+## Using it together with the AUR FFmpeg plugin
+
+This plugin can be installed side by side with
+[`davinci-ffmpeg-encoder-plugin`](https://aur.archlinux.org/packages/davinci-ffmpeg-encoder-plugin)
+(EdvinNilsson's FFmpeg plugin). Nothing to configure: they use different IDs and different
+folders in `/opt/resolve/IOPlugins`, and updating or removing one doesn't touch the other.
+
+In Deliver you will see both sets of codecs. Ours are the ones named **YouTube … (AMD VAAPI)**
+and **AAC Stereo (YouTube AMD)**; the AUR ones end in **(FFmpeg)**. The *YouTube AMD* presets
+always use ours. You can also mix them: an AUR video codec with our AAC audio works.
+
+Tested together on my machine (Resolve Studio 21.1.1, AUR plugin 1.4.0): all presets pass and
+a render with the AUR HEVC codec + our AAC is fine.
+
+**Resolve closes right when it starts (only with the AUR plugin installed):** the AUR plugin
+starts Vulkan when Resolve loads, and some Vulkan layers crash there — on my machine it was
+**lsfg-vk** (Lossless Scaling frame generation). Our plugin doesn't use Vulkan, so it isn't
+affected. Fix: start Resolve with that layer turned off, e.g. in
+`~/.local/share/applications/com.blackmagicdesign.resolve.desktop`:
+
+```
+Exec=env DISABLE_LSFGVK=1 /opt/resolve/bin/resolve %u
+```
+
 ## Troubleshooting
 
 | Problem | Fix |
